@@ -6,12 +6,15 @@ import javax.mail.*;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * Created by 46465442z on 24/02/16.
+ */
 public class LeerMail {
 
     private static Message[] messages;      // Array de message
-    private static Properties properties;    // Properties
+    private static Properties properties;   // Properties
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, MessagingException {
 
         // Ajustamos primero las properties
         properties = System.getProperties();
@@ -20,56 +23,52 @@ public class LeerMail {
         properties.put("mail.pop.starttls.enable", "true");
 
         // Credenciales de usuario
-        String direccionCorreo = "sergimail@gmail.com";       // Dirección de correo
-        String contrasenyaCorreo = "contrasenyaprovisional";  // Contraseña
+        String direccionCorreo = "poblenouDAM2sbarjola@gmail.com";   // Dirección de correo
+        String contrasenyaCorreo = "pruebajavamail";                 // Contraseña
 
         // Mostramos los emails
         obtenerMensajes(direccionCorreo, contrasenyaCorreo);
     }
 
-    public static void obtenerMensajes(String direccionCorreo, String contrasenyaCorreo) {
+    public static void obtenerMensajes(String direccionCorreo, String contrasenyaCorreo) throws MessagingException, IOException {
 
-        try  {
-            // abrimos sesion de email y le pasamos su datos
-            Session emailSession = Session.getDefaultInstance(properties);
-            Store store = emailSession.getStore("pop3s");
-            store.connect("pop.gmail.com", direccionCorreo, contrasenyaCorreo);
+        // abrimos sesion de email y le pasamos su datos
+        Session emailSession = Session.getDefaultInstance(properties);
+        Store store = emailSession.getStore("pop3s");
+        store.connect("pop.gmail.com", direccionCorreo, contrasenyaCorreo);
 
-            // Extraemos los correos de la carpeta Inbox
-            Folder emailFolder = store.getFolder("INBOX");
-            emailFolder.open(Folder.READ_ONLY);
-            messages = emailFolder.getMessages();
+        // Extraemos los correos de la carpeta Inbox
+        Folder emailFolder = store.getFolder("INBOX");
+        emailFolder.open(Folder.READ_ONLY);
+        messages = emailFolder.getMessages();
 
-            // Mostramos la bienvenida al usuario y el menú
+        // Mostramos la bienvenida al usuario y el menú
 
-            System.out.println("------------------------------------------------------");
-            System.out.println("---------------------LISTA MAILS----------------------");
-            System.out.println("------------------------------------------------------");
+        System.out.println("---------------------------------------------------------------------");
+        System.out.println("-----------------------------LISTA MAILS-----------------------------");
+        System.out.println("---------------------------------------------------------------------");
 
-            System.out.println("Bienvenido: " + direccionCorreo);
-            System.out.println("Tienes " + messages.length + " mensajes en tu bandeja de entrada");
+        System.out.println("Bienvenido: " + direccionCorreo);
+        System.out.println("Tienes " + messages.length + " mensajes en tu bandeja de entrada");
 
-            // Imprimimos los correos de forma ordenada
-            imprimirMensajes();
+        // Imprimimos los correos de forma ordenada
+        imprimirMensajes();
 
-            // Cerramos conexion
-            emailFolder.close(false);
-            store.close();
-        }
-        catch (MessagingException one) {}
-        catch (IOException two) {}
+        // Cerramos conexion
+        emailFolder.close(false);
+        store.close();
+
     }
 
     public static void imprimirMensajes() throws MessagingException, IOException {
-        // Imprimimos todos los correos con un for
         for (int iterador = 0; iterador < messages.length; iterador++) {
-            System.out.println();
-            Message message = messages[iterador];
-            System.out.println("-------------------------------------------------------------------");
+            Message message = messages[iterador];   // Imprimimos todos los correos con un for
+
+            System.out.println("\n---------------------------------------------------------------------");
             System.out.println((iterador + 1) + " - " + message.getSubject());
             System.out.println("De:                     " + message.getFrom()[0]);
             System.out.println("Cuerpo del coreo:       " + message.getContent().toString());
-            System.out.println("-------------------------------------------------------------------");
+            System.out.println("---------------------------------------------------------------------");
         }
     }
 }
