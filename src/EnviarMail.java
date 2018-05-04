@@ -1,5 +1,5 @@
 /**
- * Created by 46465442z on 24/02/16.
+ * Created by helicida on 24/02/16.
  */
 
 import javax.mail.Message;
